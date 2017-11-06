@@ -19,6 +19,8 @@ class DNASequence():
     # C => 10
     # G => 11
     size = 0 # Size of sequence
+    inverted = False
+    reversed = False
 
     ## The constructor
     def __init__(self):
@@ -44,6 +46,8 @@ class DNASequence():
     #  @return: The size of DNASeuence in base pairs
     def setDNABits(self, seq = bitarray()):
         self.dna = seq
+        self.inverted = False
+        self.reversed = False
         return self.setBpCount()
 
     ## Gets the length in base pairs
@@ -140,6 +144,36 @@ class DNASequence():
         if(l != self.mathh.floatToInt(len(self.dna))):
             return self.fixBpAlignment()
         return self.size
+
+    ## Inverts the DNA sequence: A => T, T => A, C => G and G => C
+    #  @type self: DNASequence
+    #  @param self: The DNA Sequence
+    #
+    #  @rtype: bool
+    #  @return: Whether the DNA sequence is inverted from original input.
+    def invertDNA(self):
+        self.setBpCount() # Make sure count is correct and check/repair offset
+        for i in range(1, len(self.dna), 2): # invert every odd bit
+            self.dna[i] = self.dna[i] ^ True
+        self.inverted = self.inverted ^ True
+        return self.inverted
+
+    ## Reverses the DNA sequence: ATGC => CGTA
+    #  @type self: DNASequence
+    #  @param self: The DNA Sequence
+    #
+    #  @rtype: bool
+    #  @return: Whether the DNA seuence is reversed from original input.
+    def reverseDNA(self):
+        self.setBpCount() # Make sure count is correct and set/repair offset
+        rev = bitarray() # Temp hold reversed array
+        h = 0;
+        for i in range(len(self.dna), 0, -2): # For each base pair in reverse
+            h = i - 1
+            rev.append([self.dna[h], self.dna[i]]) # Add bp bits in reverse
+        self.dna = rev
+        self.reversed = self.reversed ^ True
+        return self.reversed
 
 
 
