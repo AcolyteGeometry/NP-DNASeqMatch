@@ -12,6 +12,11 @@ class Matcher():
     def __init__(self):
         pass
 
+    '''
+    TODO: Invert matching
+    TODO: Reverse sequence matching
+    '''
+
     ## Calculate base pair matches
     #  @type self: Matcher
     #  @param self: The matcher
@@ -23,7 +28,7 @@ class Matcher():
     #  @param seqb: The DNA sequence to match against
     #
     #  @type min: float
-    #  @param min: Normal percentage for minimum match (default 0.01 == 1%)
+    #  @param min: Normal percentage for minimum match overlap (default 0.01 == 1%)
     #
     #  @rtype: np.array(float, int, int, bitarray)
     #  @return: Array containing best match normal percentage, number of matches, offset, and bits (bool) whether index base pair matches.
