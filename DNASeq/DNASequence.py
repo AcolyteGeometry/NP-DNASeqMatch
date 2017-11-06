@@ -1,12 +1,16 @@
 ## @package DNASeq.DNASequence
 #  A class and methods for holding and querying a DNA sequence
-from bitarray import bitarray
 from Utils.MathHelpers import MathHelpers
+from .BasePair import BasePair
+from bitarray import bitarray
+
+
 
 ## Class representing a sequence of DNA
 class DNASequence():
 
     mathh = MathHelpers()
+    bp = BasePair() # Base pair helper class object
     dna = bitarray()
     # This will hold a bit array of a R/DNA sequence.
     # A => 00
@@ -29,6 +33,19 @@ class DNASequence():
     def getDNABits(self):
         return self.dna
 
+    ## Sets the dna bitarray with base pair alignment
+    #  @type self: DNASequence
+    #  @param self: The class
+    #
+    #  @type seq: bitarray
+    #  @param seq: The DNA sequence as bitarray
+    #
+    #  @rtype: int
+    #  @return: The size of DNASeuence in base pairs
+    def setDNABits(self, seq = bitarray()):
+        self.dna = seq
+        return self.setBpCount()
+
     ## Gets the length in base pairs
     #  @type self: DNASequence
     #  @param self: The object
@@ -36,11 +53,10 @@ class DNASequence():
     #  @rtype: float
     #  @return: The number of base pairs in sequence
     def getBpCount(self):
-        l = self.mathh.floatToInt2(len(self.dna))
-        return self.mathh.floatToInt2(l * 0.5)
+        return self.size
 
     ## Gets a number of base pairs from a DNA sequence
-    #  @type self: Sequence
+    #  @type self: DNASequence
     #  @param self: The class
     #
     #  @type start: float
@@ -51,7 +67,7 @@ class DNASequence():
     #
     #  @rtype: bitarray
     #  @return: The subsequence of DNA, up to the length of the sequence from index.
-    def getDNASubseqBits(self, start = 0.0, length = float('inf')):
+    def getDNASubseqBits(self, start = 0, length = float('inf')):
         odna = bitarray() # Array of bits to return
         tba = bitarray(2) # Temp array of 2 bits for appending
         tba.setall(False) # Initialize false
@@ -65,7 +81,7 @@ class DNASequence():
         return odna
 
     ## Append the R/DNA Sequence
-    #  @type self: Sequence
+    #  @type self: DNASequence
     #  @param self: The object
     #
     #  @type seq: bitarray
@@ -74,13 +90,27 @@ class DNASequence():
     #  @rtype: int
     #  @return: The new length in base pairs
     def appendSeqBits(self, seq = bitarray()):
-        l = self.mathh.floatToInt2(len(self.dna) * 0.5)
         if(len(seq) >= 2 ): # If there is something worth adding
-            if(len(seq) % 2 != 0): # If not an even number of bits
-                del seq[-1] # Remove last bit to align to bp
             self.dna.append(seq) # actually append the sequence
-            l += self.mathh.floatToInt2(len(seq) * 0.5) # new length
-        self.size = l
+        self.setBpCount()
+        return self.size
+
+    ## Append the R/DNA Sequence
+    #  @type self: DNASequence
+    #  @param self: The object
+    #
+    #  @type seq: str
+    #  @param seq: String containing the DNA bp sequence to append.
+    #
+    #  @rtype: int
+    #  @return: The new length in base pairs
+    def appendSeqChars(self, seq=''):
+        if (len(seq) >= 1 & isinstance(seq, str)):  # If there is something worth adding
+            bseq = bitarray()
+            for i in seq:
+                bseq.append(self.bp.getBpBits(i))
+            self.dna.append(bseq)  # actually append the sequence
+        self.setBpCount()
         return self.size
 
     ## Fix the alignment of base pairs (removes last bit in dna bitarray if number of bits is uneven)
@@ -107,7 +137,7 @@ class DNASequence():
         l = self.mathh.floatToInt2(len(self.dna))
         if(l != self.mathh.floatToInt(len(self.dna))):
             return self.fixBpAlignment()
-        return self.mathh.floatToInt2(l * 0.5)
+        return self.size
 
 
 
