@@ -11,16 +11,16 @@ class DNASequence():
 
     mathh = MathHelpers()
     bp = BasePair() # Base pair helper class object
-    dna = bitarray()
     # This will hold a bit array of a R/DNA sequence.
     # A => 00
     # T => 01
     # U => 01
     # C => 10
     # G => 11
+    dna = bitarray()
     size = 0 # Size of sequence
-    inverted = False
-    reversed = False
+    inverted = False # If the sequence is inverted from input
+    reversed = False # If the sequence is reversed from input
 
     ## The constructor
     def __init__(self):
@@ -175,6 +175,23 @@ class DNASequence():
         self.reversed = self.reversed ^ True
         return self.reversed
 
+    ## Returns whether the sequence is inverted
+    #  @type self: DNASequence
+    #  @param self: The DNA Sequence
+    #
+    #  @rtype: bool
+    #  @return: If the DNA sequence is inverted from original input.
+    def isInverted(self):
+        return self.inverted
+
+    ## Returns whether the sequence is reversed
+    #  @type self: DNASequence
+    #  @param self: The DNA Sequence
+    #
+    #  @rtype: bool
+    #  @return: If the DNA sequence is reversed from original input.
+    def isReversed(self):
+        return self.reversed
 
 
 
