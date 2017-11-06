@@ -123,7 +123,7 @@ class Matcher():
         if(la >= 2 & lb >= 2): # If there is something to match
             h = 0
             for i in range(0, la, 2):
-                if(la > i):
+                if(la > i & lb > i):
                     h = i+1
                     if(seqa[i] == seqb[i] & seqa[h] == seqb[h]):
                         matches += 1
