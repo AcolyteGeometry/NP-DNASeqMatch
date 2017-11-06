@@ -12,11 +12,6 @@ class Matcher():
     def __init__(self):
         pass
 
-    '''
-    TODO: Invert matching
-    TODO: Reverse sequence matching
-    '''
-
     ## Calculate base pair matches, checks regular, inverted, reversed and inverted, and reversed.
     #  @type self: Matcher
     #  @param self: The matcher
