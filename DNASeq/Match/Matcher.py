@@ -17,7 +17,7 @@ class Matcher():
     TODO: Reverse sequence matching
     '''
 
-    ## Calculate base pair matches
+    ## Calculate base pair matches, checks regular, inverted, reversed and inverted, and reversed.
     #  @type self: Matcher
     #  @param self: The matcher
     #
@@ -38,11 +38,57 @@ class Matcher():
         matcharr = bitarray()
         matchnormal = 0.0
         if(seqa.getBpCount() > 0 & seqb.getBpCount() > 0): # If there is something to match
+            # Regular matching
             mbest = self.matchBitArray(seqa.getDNABits(), seqb.getDNABits()) # Match with no offset
             matches = mbest[0]
             matcharr = mbest[1]
             matchnormal = float(matches) / float(seqa.getBpCount())
             mtest = None
+            for i in range(1, seqa.getBpCount() - seqa.getBpCount() * min): # for bp offset in seqa (Direction 1)
+                mtest = self.matchBitArray(seqa.getDNASubseqBits(i), seqb.getDNABits())
+                if(float(mtest[0]) / float(seqa.getBpCount() - i) > matchnormal): # If this is a better match
+                    matches = mtest[0]
+                    matcharr = mtest[1]
+                    matchnormal = float(matches) / float(seqa.getBpCount() - i)
+            for i in range(1, seqb.getBpCount() - seqb.getBpCount() * min): # for bp offset in seqb (Direction 2)
+                mtest = self.matchBitArray(seqb.getDNASubseqBits(i), seqa.getDNABits())
+                if(float(mtest[0]) / float(seqb.getBpCount() - i) > matchnormal): # If this is a better match
+                    matches = mtest[0]
+                    matcharr = mtest[1]
+                    matchnormal = float(matches) / float(seqb.getBpCount() - i)
+
+            # Inverted matching
+            seqa.invertDNA()
+            for i in range(0, seqa.getBpCount() - seqa.getBpCount() * min): # for bp offset in seqa (Direction 1)
+                mtest = self.matchBitArray(seqa.getDNASubseqBits(i), seqb.getDNABits())
+                if(float(mtest[0]) / float(seqa.getBpCount() - i) > matchnormal): # If this is a better match
+                    matches = mtest[0]
+                    matcharr = mtest[1]
+                    matchnormal = float(matches) / float(seqa.getBpCount() - i)
+            for i in range(0, seqb.getBpCount() - seqb.getBpCount() * min): # for bp offset in seqb (Direction 2)
+                mtest = self.matchBitArray(seqb.getDNASubseqBits(i), seqa.getDNABits())
+                if(float(mtest[0]) / float(seqb.getBpCount() - i) > matchnormal): # If this is a better match
+                    matches = mtest[0]
+                    matcharr = mtest[1]
+                    matchnormal = float(matches) / float(seqb.getBpCount() - i)
+
+            # Inverted and Reversed matching
+            seqa.reverseDNA()
+            for i in range(0, seqa.getBpCount() - seqa.getBpCount() * min): # for bp offset in seqa (Direction 1)
+                mtest = self.matchBitArray(seqa.getDNASubseqBits(i), seqb.getDNABits())
+                if(float(mtest[0]) / float(seqa.getBpCount() - i) > matchnormal): # If this is a better match
+                    matches = mtest[0]
+                    matcharr = mtest[1]
+                    matchnormal = float(matches) / float(seqa.getBpCount() - i)
+            for i in range(0, seqb.getBpCount() - seqb.getBpCount() * min): # for bp offset in seqb (Direction 2)
+                mtest = self.matchBitArray(seqb.getDNASubseqBits(i), seqa.getDNABits())
+                if(float(mtest[0]) / float(seqb.getBpCount() - i) > matchnormal): # If this is a better match
+                    matches = mtest[0]
+                    matcharr = mtest[1]
+                    matchnormal = float(matches) / float(seqb.getBpCount() - i)
+
+            # Reversed matching
+            seqa.invertDNA() # Revert inversion
             for i in range(1, seqa.getBpCount() - seqa.getBpCount() * min): # for bp offset in seqa (Direction 1)
                 mtest = self.matchBitArray(seqa.getDNASubseqBits(i), seqb.getDNABits())
                 if(float(mtest[0]) / float(seqa.getBpCount() - i) > matchnormal): # If this is a better match
