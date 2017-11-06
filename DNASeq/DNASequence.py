@@ -71,10 +71,12 @@ class DNASequence():
         odna = bitarray() # Array of bits to return
         tba = bitarray(2) # Temp array of 2 bits for appending
         tba.setall(False) # Initialize false
-        start = self.mathh.floatToInt2(start * 2.0) # Since each base pair is 2 bits
-        length = self.mathh.floatToInt2(length * 2.0) # We double both values
+        if(length == float('inf') | length > self.size):
+            length = self.size - start
+        start = self.mathh.floatToInt2(start * 2) # Since each base pair is 2 bits
+        length = self.mathh.floatToInt2(length * 2) # We double both values
         if(start < self.size): # Make sure we aren't starting out past the end of seuence.
-            for i in range(start,(start + length), 2): # For every even bit
+            for i in range(start, length, 2): # For every even bit
                 tba[0] = self.dna[i] # set the temp bit and the next (odd) bit
                 tba[1] = self.dna[i+1]
                 odna.append(tba) # Append bits to bitarray

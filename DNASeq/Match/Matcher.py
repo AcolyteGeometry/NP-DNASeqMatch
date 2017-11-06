@@ -22,15 +22,35 @@ class Matcher():
     #  @type seqb: DNASequence
     #  @param seqb: The DNA sequence to match against
     #
-    #  @rtype: np.array(int, int, bitarray)
-    #  @return: Array containing number of matches for best match, offset, and bits (bool) whether the base pair matches.
-    def matchDNASequence(self, seqa = DNASequence(), seqb = DNASequence()):
+    #  @type min: float
+    #  @param min: Normal percentage for minimum match (default 0.01 == 1%)
+    #
+    #  @rtype: np.array(float, int, int, bitarray)
+    #  @return: Array containing best match normal percentage, number of matches, offset, and bits (bool) whether index base pair matches.
+    def matchDNASequence(self, seqa = DNASequence(), seqb = DNASequence(), min = 0.01):
         matches = 0
         bestoffset = 0
         matcharr = bitarray()
+        matchnormal = 0.0
         if(seqa.getBpCount() > 0 & seqb.getBpCount() > 0): # If there is something to match
-            pass
-        return np.array([matches, bestoffset, matcharr])
+            mbest = self.matchBitArray(seqa.getDNABits(), seqb.getDNABits()) # Match with no offset
+            matches = mbest[0]
+            matcharr = mbest[1]
+            matchnormal = float(matches) / float(seqa.getBpCount())
+            mtest = None
+            for i in range(1, seqa.getBpCount() - seqa.getBpCount() * min): # for bp offset in seqa (Direction 1)
+                mtest = self.matchBitArray(seqa.getDNASubseqBits(i), seqb.getDNABits())
+                if(float(mtest[0]) / float(seqa.getBpCount() - i) > matchnormal): # If this is a better match
+                    matches = mtest[0]
+                    matcharr = mtest[1]
+                    matchnormal = float(matches) / float(seqa.getBpCount() - i)
+            for i in range(1, seqb.getBpCount() - seqb.getBpCount() * min): # for bp offset in seqb (Direction 2)
+                mtest = self.matchBitArray(seqb.getDNASubseqBits(i), seqa.getDNABits())
+                if(float(mtest[0]) / float(seqb.getBpCount() - i) > matchnormal): # If this is a better match
+                    matches = mtest[0]
+                    matcharr = mtest[1]
+                    matchnormal = float(matches) / float(seqb.getBpCount() - i)
+        return np.array([matchnormal, matches, bestoffset, matcharr])
 
     ## Check matches for bitarrays
     #  @type self: Matcher
@@ -60,6 +80,6 @@ class Matcher():
                     else:
                         matcharr.append(False)
         return np.array([matches, matcharr])
-    
+
 
 
