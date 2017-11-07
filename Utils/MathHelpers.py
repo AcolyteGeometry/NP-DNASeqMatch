@@ -64,3 +64,19 @@ class MathHelpers():
         if((ret % 2) != 0):
             ret += 1
         return ret
+
+
+    ## Converts a float rounded down to the nearest even integer.
+    # @type self: MathHelpers
+    # @param self: The object.
+    #
+    # @type fl: Float, String
+    # @param fl: Float to convert to integer
+    #
+    # @rtype: Integer
+    # @return: An even integer rounded to one place, or 0 if input is invalid.
+    def floatToIntm2(self, fl):
+        ret = self.floatToInt(fl)
+        if((ret % 2) != 0):
+            ret -= 1
+        return ret

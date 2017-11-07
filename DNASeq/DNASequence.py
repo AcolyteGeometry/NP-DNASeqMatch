@@ -77,8 +77,8 @@ class DNASequence():
         tba.setall(False) # Initialize false
         if(length == float('inf') | length > self.size):
             length = self.size - start
-        start = self.mathh.floatToInt2(start * 2) # Since each base pair is 2 bits
-        length = self.mathh.floatToInt2(length * 2) # We double both values
+        start = self.mathh.floatToIntm2(start * 2) # Since each base pair is 2 bits
+        length = self.mathh.floatToIntm2(length * 2) # We double both values
         if(start < self.size): # Make sure we aren't starting out past the end of seuence.
             for i in range(start, length, 2): # For every even bit
                 tba[0] = self.dna[i] # set the temp bit and the next (odd) bit
@@ -126,11 +126,11 @@ class DNASequence():
     #  @rtype: int
     #  @return: The number of base pairs in DNASequence
     def fixBpAlignment(self):
-        l = self.mathh.floatToInt2(len(self.dna))
+        l = self.mathh.floatToInt(len(self.dna))
         if(l % 2 != 0):
             del self.dna[-1]
             l -= 1
-            self.size = self.mathh.floatToInt2(l * 0.5)
+            self.size = self.mathh.floatToIntm2(l * 0.5)
         return self.size
 
     ## Sets the length in base pairs, fixes alignment and length if off.
@@ -140,7 +140,7 @@ class DNASequence():
     #  @rtype: int
     #  @return: The number of base pairs in sequence
     def setBpCount(self):
-        l = self.mathh.floatToInt2(len(self.dna))
+        l = self.mathh.floatToIntm2(len(self.dna))
         if(l != self.mathh.floatToInt(len(self.dna))):
             return self.fixBpAlignment()
         return self.size

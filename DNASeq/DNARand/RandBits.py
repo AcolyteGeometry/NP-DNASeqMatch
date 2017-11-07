@@ -1,6 +1,5 @@
 ## @package: DNASeq.DNARand.Random
-#  Methods for generating random DNASequence.
-from DNASeq.DNASequence import DNASequence
+#  Generates random bitarrays
 from Utils.MathHelpers import MathHelpers
 from numpy.random import bytes as randbytes
 from bitarray import bitarray
@@ -13,21 +12,6 @@ class RandBits():
     ## The constructor
     def __init__(self):
         pass
-
-    ## Generates a random DNASequence
-    #  @type self: RandBits
-    #  @param self: The object
-    #
-    #  @type length: int
-    #  @param length: The number of base pairs
-    #
-    #  @rtype: DNASequence
-    #  @return: The DNASeuence generated
-    def getRandDNASequence(self, length = 1):
-        rseq = DNASequence()
-        length = length * 2
-        rseq.setDNABits(self.getRandBits(length))
-        return rseq
 
     ## Generate random bits
     #  @type self: RandBits
