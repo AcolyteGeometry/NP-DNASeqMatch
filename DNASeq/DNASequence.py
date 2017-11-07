@@ -48,7 +48,8 @@ class DNASequence():
         self.dna = seq
         self.inverted = False
         self.reversed = False
-        return self.setBpCount()
+        self.size = self.setBpCount()
+        return self.size
 
     ## Gets the length in base pairs
     #  @type self: DNASequence
@@ -71,20 +72,26 @@ class DNASequence():
     #
     #  @rtype: bitarray
     #  @return: The subsequence of DNA, up to the length of the sequence from index.
-    def getDNASubseqBits(self, start = 0, length = float('inf')):
-        odna = bitarray() # Array of bits to return
-        tba = bitarray(2) # Temp array of 2 bits for appending
-        tba.setall(False) # Initialize false
-        if(length == float('inf') | length > self.size):
+    def getDNASubseqBits(self, start = 0, length = 100):
+        if ((length == float('inf'))):
             length = self.size - start
-        start = self.mathh.floatToIntm2(start * 2) # Since each base pair is 2 bits
-        length = self.mathh.floatToIntm2(length * 2) # We double both values
-        if(start < self.size): # Make sure we aren't starting out past the end of seuence.
-            for i in range(start, length, 2): # For every even bit
-                tba[0] = self.dna[i] # set the temp bit and the next (odd) bit
-                tba[1] = self.dna[i+1]
-                odna.append(tba) # Append bits to bitarray
-        return odna
+        if(start + length > self.size):
+            length -= ((start + length) - self.size)
+        start = start * 2  # Since each base pair is 2 bits
+        length = length * 2  # We double both values
+        otdna = bitarray(length)  # Array of bits to return
+        otdna.setall(False)
+        if(start < self.dna.length()): # Make sure we aren't starting out past the end of sequence.
+            idx = 0
+            j = 0
+            h = start + length
+            for i in range(start, h, 2): # For every even bit
+                j = i + 1
+                otdna[idx] = self.dna[i] # set the temp bit and the next (odd) bit
+                idx += 1
+                otdna[idx] = self.dna[j]
+                idx += 1
+        return otdna
 
     ## Append the R/DNA Sequence
     #  @type self: DNASequence
@@ -126,11 +133,9 @@ class DNASequence():
     #  @rtype: int
     #  @return: The number of base pairs in DNASequence
     def fixBpAlignment(self):
-        l = self.mathh.floatToInt(len(self.dna))
-        if(l % 2 != 0):
+        if(len(self.dna) % 2 != 0):
             del self.dna[-1]
-            l -= 1
-            self.size = self.mathh.floatToIntm2(l * 0.5)
+        self.size = self.mathh.floatToInt(len(self.dna) / 2)
         return self.size
 
     ## Sets the length in base pairs, fixes alignment and length if off.
@@ -140,9 +145,9 @@ class DNASequence():
     #  @rtype: int
     #  @return: The number of base pairs in sequence
     def setBpCount(self):
-        l = self.mathh.floatToIntm2(len(self.dna))
-        if(l != self.mathh.floatToInt(len(self.dna))):
+        if(len(self.dna) % 2 != 0):
             return self.fixBpAlignment()
+        self.size = self.mathh.floatToInt(len(self.dna) / 2)
         return self.size
 
     ## Inverts the DNA sequence: A => T, T => A, C => G and G => C

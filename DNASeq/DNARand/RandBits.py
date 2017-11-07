@@ -1,7 +1,7 @@
 ## @package: DNASeq.DNARand.Random
 #  Generates random bitarrays
 from Utils.MathHelpers import MathHelpers
-from numpy.random import bytes as randbytes
+from numpy import random
 from bitarray import bitarray
 
 ## Class for generating random bit array sequences
@@ -26,10 +26,11 @@ class RandBits():
         bits = bitarray()
         if(amt >= 8): # 8 bit bytes
             for i in range(self.mathh.floatToInt(float(amt) * 0.125)):
-                bits.append(randbytes(1))
+                bits.frombytes(random.bytes(1))
         # and bits
         sz = amt % 8
-        abyte = bitarray(randbytes(1))
+        abyte = bitarray()
+        abyte.frombytes(random.bytes(1))
         for i in range(sz):
             bits.append(abyte[i])
         return bits
